@@ -4,30 +4,43 @@ mongosh.exe
 
 VSC---
 
-PS C:\Users\nisha> cd C:\Users\nisha\OneDrive\Documents\Spring\DesignStudio\Workspace
-PS C:\Users\nisha\OneDrive\Documents\Spring\DesignStudio\Workspace> node webserver.js
+PS C:\Users\nisha> cd C:\Users\nisha\Documents\Spring\DesignStudio\Workspace
+PS C:\Users\nisha\Documents\Spring\DesignStudio\Workspace> node webserver.js
 
 Express---
-C:\Users\nisha\OneDrive\Documents\Spring\DesignStudio\Workspace\express-app> node index.js
+C:\Users\nisha\Documents\Spring\DesignStudio\Workspace\express-app> node index.js
 
 
 Use the command ng new mean-test to create a new angular application with the name mean-test. The application will be created in a directory of the same name.
 
-C:\Users\nisha\OneDrive\Documents\Spring\DesignStudio\Workspace> ng new mean-test
+C:\Users\nisha\Documents\Spring\DesignStudio\Workspace> ng new mean-test
 
-C:\Users\nisha\OneDrive\Documents\Spring\DesignStudio\Workspace\mean-test> ng serve
+C:\Users\nisha\Documents\Spring\DesignStudio\Workspace\mean-test> ng serve
+
+
+to create new component:
+
+ng generate component ProfileEditor
 
 
 backup of a specific database -> 
 
-cd C:\Users\nisha\OneDrive\Documents\Spring\DesignStudio\mongodb
+C:\Users\nisha\Documents\Spring\DesignStudio\Workspace\mongodb
 
 mongodump -d IT6203 --out IT6203Backup
 
 Restore a specific database -->
 
+C:\Users\nisha\Documents\Spring\DesignStudio\Workspace\mongodb
+
 mongorestore IT6203Backup
 
+show dbs
+show collections
+use IT6203
 
+db.Students.find()
 
 db.Students.insertMany([{firstName: "Nisha", lastName: "Bagdwal"}, {firstName: "Raghurama", lastName: "Reddy Nambuvaripalli Reddappa"}, {firstName: "Tharun", lastName: "Derangula"}, {firstName: "Vivek", lastName: "Reddy Suresh Puttireddy"}])
+
+db.dropDatabse()
