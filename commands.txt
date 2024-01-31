@@ -1,0 +1,33 @@
+Mongo shell---
+
+mongosh.exe
+
+VSC---
+
+PS C:\Users\nisha> cd C:\Users\nisha\OneDrive\Documents\Spring\DesignStudio\Workspace
+PS C:\Users\nisha\OneDrive\Documents\Spring\DesignStudio\Workspace> node webserver.js
+
+Express---
+C:\Users\nisha\OneDrive\Documents\Spring\DesignStudio\Workspace\express-app> node index.js
+
+
+Use the command ng new mean-test to create a new angular application with the name mean-test. The application will be created in a directory of the same name.
+
+C:\Users\nisha\OneDrive\Documents\Spring\DesignStudio\Workspace> ng new mean-test
+
+C:\Users\nisha\OneDrive\Documents\Spring\DesignStudio\Workspace\mean-test> ng serve
+
+
+backup of a specific database -> 
+
+cd C:\Users\nisha\OneDrive\Documents\Spring\DesignStudio\mongodb
+
+mongodump -d IT6203 --out IT6203Backup
+
+Restore a specific database -->
+
+mongorestore IT6203Backup
+
+
+
+db.Students.insertMany([{firstName: "Nisha", lastName: "Bagdwal"}, {firstName: "Raghurama", lastName: "Reddy Nambuvaripalli Reddappa"}, {firstName: "Tharun", lastName: "Derangula"}, {firstName: "Vivek", lastName: "Reddy Suresh Puttireddy"}])
