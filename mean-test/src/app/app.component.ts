@@ -1,12 +1,19 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NameEditorComponent } from './name-editor/name-editor.component';
 import { ProfileEditorComponent } from './profile-editor/profile-editor.component';
+import { WarningMessageComponent } from './warning-message/warning-message.component';
+import { SuccessMessageComponent } from './success-message/success-message.component';
+import { SelectorComponent } from './selector/selector.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NameEditorComponent, ProfileEditorComponent],
+  imports: [
+    RouterOutlet, 
+    ProfileEditorComponent, 
+    WarningMessageComponent, 
+    SuccessMessageComponent,
+    SelectorComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
