@@ -1,0 +1,97 @@
+<div class="form-container">
+    <h2>Driver Registration</h2>
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+
+        <div class="divided-field">
+            <div>
+                <label for="student-id">Student ID: <span class="required">*</span></label>
+                <input id="student-id" type="text" formControlName="studentId" (change) = "onStudentIdChange()">
+            </div>
+            <div>
+                <label for="phone">Phone: <span class="required">*</span></label>
+                <input id="phone" type="text" formControlName="phone">
+            </div>
+            <div>
+                <label for="first-name">First Name: <span class="required">*</span></label>
+                <input id="first-name" type="text" formControlName="firstName">
+            </div>
+            <div>
+                <label for="last-name">Last Name: <span class="required">*</span></label>
+                <input id="last-name" type="text" formControlName="lastName">
+            </div>
+        </div>
+
+        <label for="email">Email: <span class="required">*</span></label>
+        <input id="email" type="text" formControlName="email">
+
+        <div formGroupName="carInfo">
+            <h3>Car Details</h3>
+
+            <div class="divided-field">
+                <div>
+                    <label for="license-plate-number">License Plate Number: </label>
+                    <input id="license-plate-number" type="text" formControlName="licensePlateNumber">
+                </div>
+                <div>
+                    <label for="car-make">Car Make: </label>
+                    <input id="car-make" type="text" formControlName="carMake">
+                </div>
+                <div>
+                    <label for="car-model">Car Model: </label>
+                    <input id="car-model" type="text" formControlName="carModel">
+                </div>
+                <div>
+                    <label for="car-color">Car Color: </label>
+                    <input id="car-color" type="text" formControlName="carColor">
+                </div>
+            </div>
+        </div>
+
+        <div formArrayName="availabilities">
+            <h3>Availabilities</h3>
+            <div *ngFor="let availability of availabilities.controls; let i=index" [formGroupName]="i">
+                <h4>Availability {{ i + 1 }}:</h4>
+                <div class="divided-field">
+                    <div>
+                        <label for="sourceCampus-{{ i }}">Source Campus: </label>
+                        <select id="sourceCampus-{{ i }}" formControlName="sourceCampus">
+                            <option value="">--Source--</option>
+                            <option value="Kennesaw">Kennesaw</option>
+                            <option value="Marietta">Marietta</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="destinationCampus-{{ i }}">Destination Campus: </label>
+                        <select id="destinationCampus-{{ i }}" formControlName="destinationCampus">
+                            <option value="">--Destination--</option>
+                            <option value="Kennesaw">Kennesaw</option>
+                            <option value="Marietta">Marietta</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="availableDay-{{ i }}">Available Day: </label>
+                        <select id="availableDay-{{ i }}" formControlName="availableDay">
+                            <option value="">--Please choose a day--</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="availableTime-{{ i }}">Available Time: </label>
+                        <input type="time" id="availableTime-{{ i }}" formControlName="availableTime">
+                    </div>
+                </div>
+            </div>
+            <button type="button" (click)="addAvailability()">+ Add Availability</button>
+        </div>
+
+        <button type="submit" [disabled]="!profileForm.valid">Submit</button>
+
+    </form>
+</div>
