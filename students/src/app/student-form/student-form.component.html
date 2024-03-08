@@ -1,0 +1,16 @@
+<div>
+    <h3>New Student Form</h3>
+    <form (ngSubmit)="onSubmit()" [formGroup]="studentForm">
+        <mat-form-field>
+            <input matInput placeholder="First Name" id="firstname" formControlName="firstName" name="firstname">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput placeholder="Last Name" id="lastname" formControlName="lastName" name="lastname">
+        </mat-form-field>
+
+        <p>
+            <button type="submit" mat-raised-button color="primary">Submit</button>
+        </p>
+    </form>
+</div>
