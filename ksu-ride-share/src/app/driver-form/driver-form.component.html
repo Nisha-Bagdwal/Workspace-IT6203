@@ -1,0 +1,145 @@
+<div class="header">
+  <h1>Driver Registration</h1>
+</div>
+<form [formGroup]="profileForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>Driver Information</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="full-width">
+            <input matInput id="student-id" placeholder="Student ID" formControlName="studentId"
+              (change)="onStudentIdChange()">
+              @if (profileForm.controls['studentId'].hasError('required')) {
+                <mat-error>Strudent ID is <strong>required</strong></mat-error>
+              }
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field class="full-width">
+            <input matInput id="phone" placeholder="Phone" formControlName="phone">
+            @if (profileForm.controls['phone'].hasError('required')) {
+              <mat-error>Phone is <strong>required</strong></mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="full-width">
+            <input matInput id="first-name" placeholder="First Name" formControlName="firstName">
+            @if (profileForm.controls['firstName'].hasError('required')) {
+              <mat-error>First name is <strong>required</strong></mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field class="full-width">
+            <input matInput id="last-name" placeholder="Last Name" formControlName="lastName">
+            @if (profileForm.controls['lastName'].hasError('required')) {
+              <mat-error>Last name is <strong>required</strong></mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="full-width">
+            <input matInput id="email" placeholder="Email" formControlName="email">
+            @if (profileForm.controls['email'].hasError('required')) {
+              <mat-error>Email is <strong>required</strong></mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+    <div formGroupName="carInfo">
+      <mat-card-header>
+        <mat-card-title>Driver Car details</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="row">
+          <div class="col">
+            <mat-form-field class="full-width">
+              <input matInput id="license-plate-number" placeholder="License Plate Number"
+                formControlName="licensePlateNumber">
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field class="full-width">
+              <input matInput id="car-make" placeholder="Car Make" formControlName="carMake">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <mat-form-field class="full-width">
+              <input matInput id="car-model" placeholder="Car Model" formControlName="carModel">
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field class="full-width">
+              <input matInput id="car-color" placeholder="Car Color" formControlName="carColor">
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+    </div>
+    <div formArrayName="availabilities">
+      <mat-card-header>
+        <mat-card-title>Driver Availabilities</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngFor="let availability of availabilities.controls; let i=index" [formGroupName]="i">
+          <h4>Availability {{ i + 1 }}:</h4>
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="full-width">
+                <mat-select placeholder="Source Campus" formControlName="sourceCampus">
+                  <mat-option value="Kennesaw">Kennesaw</mat-option>
+                  <mat-option value="Marietta">Marietta</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="full-width">
+                <mat-select placeholder="Destination Campus" formControlName="destinationCampus">
+                  <mat-option value="Kennesaw">Kennesaw</mat-option>
+                  <mat-option value="Marietta">Marietta</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="full-width">
+                <mat-select placeholder="Available Day" formControlName="availableDay">
+                  <mat-option value="Monday">Monday</mat-option>
+                  <mat-option value="Tuesday">Tuesday</mat-option>
+                  <mat-option value="Wednesday">Wednesday</mat-option>
+                  <mat-option value="Thursday">Thursday</mat-option>
+                  <mat-option value="Friday">Friday</mat-option>
+                  <mat-option value="Saturday">Saturday</mat-option>
+                  <mat-option value="Sunday">Sunday</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="full-width">
+                <input matInput name="selected_time_A" [ngxMatTimepicker]="pickerA" placeholder="Available Time"
+                  formControlName="availableTime" readonly />
+              </mat-form-field>
+              <ngx-mat-timepicker #pickerA dottedMinutesInGap enableKeyboardInput></ngx-mat-timepicker>
+            </div>
+          </div>
+        </div>
+        <button mat-button color="primary" (click)="addAvailability()">+ Add Availability</button>
+      </mat-card-content>
+    </div>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit" style="width: 100%;" [disabled]="!profileForm.valid">Submit</button>
+    </mat-card-actions>
+  </mat-card>
+</form>

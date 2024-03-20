@@ -1,17 +1,30 @@
-import { Component } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
+import { Component, inject, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
+import { ReactiveFormsModule, FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCardModule } from '@angular/material/card';
+
 
 @Component({
-  selector: 'app-driver-component',
+  selector: 'app-driver-form',
+  templateUrl: './driver-form.component.html',
+  styleUrl: './driver-form.component.css',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
-  templateUrl: './driver-component.component.html',
-  styleUrl: './driver-component.component.css'
+  imports: [
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatCardModule,
+    ReactiveFormsModule,
+    CommonModule,
+    NgxMatTimepickerModule,
+  ]
 })
 
-export class DriverComponentComponent {
-
+export class DriverFormComponent {
   constructor(private formBuilder: FormBuilder) { }
 
   profileForm = this.formBuilder.group({
@@ -90,5 +103,4 @@ export class DriverComponentComponent {
       }
     }
   }
-  
 }

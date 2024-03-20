@@ -1,77 +1,123 @@
 <div class="header">
-    <h1>KSU Ride Share</h1>
+    <h1>Schedule A Ride</h1>
 </div>
-<div class="form-container">
-    <h2>Schedule a Ride</h2>
-
-    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
-
-        <h3>Rider Information</h3>
-
-        <div class="divided-field">
-            <div>
-                <label for="student-id">Student ID: <span class="required">*</span></label>
-                <input id="student-id" type="text" formControlName="studentId" (change)="onStudentIdChange()">
+<form [formGroup]="profileForm" novalidate (ngSubmit)="onSubmit()">
+    <mat-card class="form-card">
+        <mat-card-header>
+            <mat-card-title>Rider Information</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput id="student-id" placeholder="Student ID" formControlName="studentId"
+                            (change)="onStudentIdChange()">
+                        @if (profileForm.controls['studentId'].hasError('required')) {
+                        <mat-error>Strudent ID is <strong>required</strong></mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput id="phone" placeholder="Phone" formControlName="phone">
+                        @if (profileForm.controls['phone'].hasError('required')) {
+                        <mat-error>Phone is <strong>required</strong></mat-error>
+                        }
+                    </mat-form-field>
+                </div>
             </div>
-            <div>
-                <label for="phone">Phone: <span class="required">*</span></label>
-                <input id="phone" type="text" formControlName="phone">
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput id="first-name" placeholder="First Name" formControlName="firstName">
+                        @if (profileForm.controls['firstName'].hasError('required')) {
+                        <mat-error>First name is <strong>required</strong></mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput id="last-name" placeholder="Last Name" formControlName="lastName">
+                        @if (profileForm.controls['lastName'].hasError('required')) {
+                        <mat-error>Last name is <strong>required</strong></mat-error>
+                        }
+                    </mat-form-field>
+                </div>
             </div>
-            <div>
-                <label for="first-name">First Name: <span class="required">*</span></label>
-                <input id="first-name" type="text" formControlName="firstName">
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput id="email" placeholder="Email" formControlName="email">
+                        @if (profileForm.controls['email'].hasError('required')) {
+                        <mat-error>Email is <strong>required</strong></mat-error>
+                        }
+                    </mat-form-field>
+                </div>
             </div>
-            <div>
-                <label for="last-name">Last Name: <span class="required">*</span></label>
-                <input id="last-name" type="text" formControlName="lastName">
-            </div>
-            <div>
-                <label for="email">Email: <span class="required">*</span></label>
-                <input id="email" type="text" formControlName="email">
-            </div>
-        </div>
+        </mat-card-content>
 
         <div formGroupName="scheduledRide">
-            <h3>Schedule a Ride</h3>
-
-            <div class="divided-field">
-                <div>
-                    <label for="sourceCampus">Source Campus: <span class="required">*</span></label>
-                    <select id="sourceCampus" formControlName="sourceCampus">
-                        <option value="">--Source--</option>
-                        <option value="Kennesaw">Kennesaw</option>
-                        <option value="Marietta">Marietta</option>
-                    </select>
+            <mat-card-header>
+                <mat-card-title>Schedule a Ride</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <mat-select placeholder="Source Campus" formControlName="sourceCampus">
+                                <mat-option value="Kennesaw">Kennesaw</mat-option>
+                                <mat-option value="Marietta">Marietta</mat-option>
+                            </mat-select>
+                            @if (profileForm.get('scheduledRide.sourceCampus')?.hasError('required')) {
+                            <mat-error>Source Campus is <strong>required</strong></mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <mat-select placeholder="Destination Campus" formControlName="destinationCampus">
+                                <mat-option value="Kennesaw">Kennesaw</mat-option>
+                                <mat-option value="Marietta">Marietta</mat-option>
+                            </mat-select>
+                            @if (profileForm.get('scheduledRide.destinationCampus')?.hasError('required')) {
+                            <mat-error>Destination Campus is <strong>required</strong></mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
                 </div>
-                <div>
-                    <label for="destinationCampus">Destination Campus: <span class="required">*</span></label>
-                    <select id="destinationCampus" formControlName="destinationCampus">
-                        <option value="">--Destination--</option>
-                        <option value="Kennesaw">Kennesaw</option>
-                        <option value="Marietta">Marietta</option>
-                    </select>
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <mat-select placeholder="Day of Ride" formControlName="dayOfRide">
+                                <mat-option value="Monday">Monday</mat-option>
+                                <mat-option value="Tuesday">Tuesday</mat-option>
+                                <mat-option value="Wednesday">Wednesday</mat-option>
+                                <mat-option value="Thursday">Thursday</mat-option>
+                                <mat-option value="Friday">Friday</mat-option>
+                                <mat-option value="Saturday">Saturday</mat-option>
+                                <mat-option value="Sunday">Sunday</mat-option>
+                            </mat-select>
+                            @if (profileForm.get('scheduledRide.dayOfRide')?.hasError('required')) {
+                            <mat-error>Day of Ride is <strong>required</strong></mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field class="full-width">
+                            <input matInput name="selected_time_A" [ngxMatTimepicker]="pickerA"
+                                placeholder="Time of Ride" formControlName="timeOfRide" readonly />
+                            @if (profileForm.get('scheduledRide.timeOfRide')?.hasError('required')) {
+                            <mat-error>Time of Ride is <strong>required</strong></mat-error>
+                            }
+                        </mat-form-field>
+                        <ngx-mat-timepicker #pickerA dottedMinutesInGap enableKeyboardInput></ngx-mat-timepicker>
+                    </div>
                 </div>
-                <div>
-                    <label for="dayOfRide">Day of Ride: <span class="required">*</span></label>
-                    <select id="dayOfRide" formControlName="dayOfRide">
-                        <option value="">--Please choose a day--</option>
-                        <option value="Monday">Monday</option>
-                        <option value="Tuesday">Tuesday</option>
-                        <option value="Wednesday">Wednesday</option>
-                        <option value="Thursday">Thursday</option>
-                        <option value="Friday">Friday</option>
-                        <option value="Saturday">Saturday</option>
-                        <option value="Sunday">Sunday</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="timeOfRide">Time of Ride: <span class="required">*</span></label>
-                    <input type="time" id="timeOfRide" formControlName="timeOfRide">
-                </div>
-            </div>
+            </mat-card-content>
         </div>
-
-        <button type="submit" [disabled]="!profileForm.valid">Search Available Rides</button>
-
-    </form>
-</div>
+        <mat-card-actions>
+            <button mat-raised-button color="primary" type="submit" style="width: 100%;"
+                [disabled]="!profileForm.valid">Search Available Rides</button>
+        </mat-card-actions>
+    </mat-card>
+</form>

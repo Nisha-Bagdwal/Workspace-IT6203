@@ -1,11 +1,22 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-schedule-ride',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, 
+    CommonModule, 
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatCardModule,
+    NgxMatTimepickerModule],
   templateUrl: './schedule-ride.component.html',
   styleUrl: './schedule-ride.component.css'
 })
