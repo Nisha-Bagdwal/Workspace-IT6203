@@ -98,3 +98,5 @@ h1 {
     border: 1px solid #c9c7c7;
     border-radius: 5px;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

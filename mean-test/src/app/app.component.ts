@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ProfileEditorComponent } from './profile-editor/profile-editor.component';
+import { AddressFormComponent } from './address-form/address-form.component';
 import { WarningMessageComponent } from './warning-message/warning-message.component';
 import { SuccessMessageComponent } from './success-message/success-message.component';
 import { SelectorComponent } from './selector/selector.component';
@@ -11,6 +12,7 @@ import { SelectorComponent } from './selector/selector.component';
   imports: [
     RouterOutlet, 
     ProfileEditorComponent, 
+    AddressFormComponent,
     WarningMessageComponent, 
     SuccessMessageComponent,
     SelectorComponent],

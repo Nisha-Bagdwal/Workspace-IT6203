@@ -21,6 +21,15 @@ export class StudentService {
             .subscribe((responseData) => {
                 console.log(responseData);
             });
+            location.reload();
+    }
+
+    deleteStudent(studentId: string) {
+        this.http.delete("http://localhost:8000/students/" + studentId)
+            .subscribe(() => {
+                console.log('Deleted: ' + studentId);
+            });
+            location.reload();
     }
 
 }

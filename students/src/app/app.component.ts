@@ -15,21 +15,25 @@ import { StudentFormComponent } from './student-form/student-form.component';
 })
 
 export class AppComponent implements OnInit {
-  title ='Students App';
+  title = 'Students App';
   //declare variable to hold response and make it public to be accessible from components.html
   public students: any;
   //initialize the call using StudentService 
   constructor(private _myService: StudentService) { }
   ngOnInit() {
-      this.getStudents();
+    this.getStudents();
   }
   //method called OnInit
   getStudents() {
-  this._myService.getStudents().subscribe({
-    //read data and assign to public variable students
-    next: (data => { this.students = data }),
-    error: (err => console.error(err)),
-    complete: (() => console.log('finished loading'))
-  });
+    this._myService.getStudents().subscribe({
+      //read data and assign to public variable students
+      next: (data => { this.students = data }),
+      error: (err => console.error(err)),
+      complete: (() => console.log('finished loading'))
+    });
+  }
+
+  onDelete(studentId: string) {
+    this._myService.deleteStudent(studentId);
   }
 }
