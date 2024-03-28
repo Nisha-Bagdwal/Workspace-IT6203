@@ -1,5 +1,5 @@
 <div>
-    <h3>New Student Form</h3>
+    <h3>{{mode}} Student Form</h3>
     <form (ngSubmit)="onSubmit()" [formGroup]="studentForm">
         <mat-form-field>
             <input matInput placeholder="First Name" id="firstname" formControlName="firstName" name="firstname">

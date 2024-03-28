@@ -1,0 +1,44 @@
+[
+    {
+	  "studentId": "123",
+      "firstName": "John",
+      "lastName": "Doe",
+      "phone": "1234567890",
+      "email": "john.doe@example.com"
+    },
+    {
+	  "studentId": "321",
+      "firstName": "Ann",
+      "lastName": "Frank",
+      "phone": "6789012345",
+      "email": "annie.frank@example.com"
+    },
+    {
+	  "studentId": "234",
+      "firstName": "Marie",
+      "lastName": "Ann",
+      "phone": "1100110011",
+      "email": "marie.ann@example.com"
+    },
+    {
+	  "studentId": "345",
+      "firstName": "Gloria",
+      "lastName": "Gilbert",
+      "phone": "2223322233",
+      "email": "gloria.gilbert@example.com"
+    },
+    {
+	  "studentId": "456",
+      "firstName": "Anthony",
+      "lastName": "Patch",
+      "phone": "2345617890",
+      "email": "anthony.patch@example.com"
+    },
+    {
+	  "studentId": "567",
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "phone": "2224455667",
+      "email": "jane.smith@example.com"
+    }
+  ]

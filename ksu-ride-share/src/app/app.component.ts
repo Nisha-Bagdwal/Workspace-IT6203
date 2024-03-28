@@ -8,7 +8,7 @@ import { DriverFormComponent } from './driver-form/driver-form.component';
   standalone: true,
   imports: [RouterOutlet, ScheduleRideComponent, DriverFormComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
   title = 'ksu-ride-share';

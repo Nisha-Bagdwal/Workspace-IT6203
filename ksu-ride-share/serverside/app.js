@@ -4,9 +4,10 @@ const bodyParser = require('body-parser');
 
 const mongoose = require('mongoose');
 //specify where to find the schema
-const Student = require('./models/student')
+const StudentInfo = require('./models/studentinfo')
+const Driver = require('./models/driver')
 //connect and display the status 
-mongoose.connect('mongodb://localhost:27017/IT6203')
+mongoose.connect('mongodb://localhost:27017/KSURideShare')
     .then(() => { console.log("connected"); })
     .catch(() => { console.log("error connecting"); });
 
@@ -27,9 +28,9 @@ app.use(bodyParser.json())
 
 //in the app.get() method below we add a path for the students API 
 //by adding /students, we tell the server that this method will be called every time http://localhost:8000/students is requested. 
-app.get('/students', (req, res, next) => {
+app.get('/studentinfo/:id', (req, res, next) => {
     //call mongoose method find (MongoDB db.Students.find())
-    Student.find()
+    StudentInfo.findOne({studentId : req.params.id})
         //if data is returned, send data as a response 
         .then(data => res.status(200).json(data))
         //if error, send internal server error
@@ -40,22 +41,30 @@ app.get('/students', (req, res, next) => {
 
 });
 
-//serve incoming post requests to /students
-app.post('/students', (req, res, next) => {
-    // create a new student variable and save request’s fields 
-    const student = new Student({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName
+app.post('/registerDriver', (req, res, next) => {
+    
+    // Extract form data
+    const { studentId, firstName, lastName, email, phone, carInfo, availabilities } = req.body;
+
+    // Create a new Driver instance
+    const driver = new Driver({
+        studentId,
+        firstName,
+        lastName,
+        email,
+        phone,
+        carInfo,
+        availabilities,
     });
+
     //send the document to the database 
-    student.save()
+    driver.save()
         //in case of success
         .then(() => {
-            console.log('Success ' + student.firstName + " " + student.lastName);
+            console.log('Registered ' + driver.firstName + " " + driver.lastName);
             //sent an acknowledgment back to caller 
             res.status(201).json('Post successful');
         })
-        //if error
         .catch(err => {
             console.log('Error:' + err);
             //sent an error back to caller 
@@ -70,51 +79,6 @@ app.delete("/students/:id", (req, res, next) => {
         res.status(200).json("Deleted!");
     });
 });
-
-app.put('/students/:id', (req, res, next) => { 
-    console.log("id: " + req.params.id) 
-    // check that the parameter id is valid 
-    if (mongoose.Types.ObjectId.isValid(req.params.id)) { 
-        //find a document and set new first and last names 
-        Student.findOneAndUpdate( 
-            {_id: req.params.id}, 
-            {$set:{ 
-                firstName : req.body.firstName, 
-                lastName : req.body.lastName 
-            }}, 
-            {new:true} 
-        ) 
-        .then((student) => { 
-            if (student) { //what was updated 
-                console.log(student); 
-            } else { 
-                console.log("no data exist for this id"); 
-            } 
-        }) 
-        .catch((err) => { 
-            console.log(err); 
-        }); 
-    } else { 
-        console.log("please provide correct id"); 
-    } 
-});
-
-//find a student based on the id
-app.get('/students/:id', (req, res, next) => {
-    //call mongoose method findOne (MongoDB db.Students.findOne())
-    Student.findOne({_id: req.params.id}) 
-        //if data is returned, send data as a response 
-        .then(data => {
-            res.status(200).json(data)
-            console.log(data);
-        })
-        //if error, send internal server error
-        .catch(err => {
-        console.log('Error: ${err}');
-        res.status(500).json(err);
-    });
-});
-                    
 
 //to use this middleware in other parts of the application
 module.exports = app;

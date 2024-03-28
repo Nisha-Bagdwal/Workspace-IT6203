@@ -21,7 +21,6 @@ export class StudentService {
             .subscribe((responseData) => {
                 console.log(responseData);
             });
-            location.reload();
     }
 
     deleteStudent(studentId: string) {
@@ -29,7 +28,22 @@ export class StudentService {
             .subscribe(() => {
                 console.log('Deleted: ' + studentId);
             });
-            location.reload();
+        location.reload();
+    }
+
+    updateStudent(studentId: string, firstName: string, lastName: string) {
+        //request path http://localhost:8000/students/5xbd456xx 
+        //first and last names will be send as HTTP body parameters 
+        this.http.put("http://localhost:8000/students/" +
+            studentId, { firstName, lastName })
+            .subscribe(() => {
+                console.log('Updated: ' + studentId);
+            });
+    }
+
+    //Uses http.get() to request data based on student id 
+    getStudent(studentId: string) {
+        return this.http.get('http://localhost:8000/students/' + studentId);
     }
 
 }

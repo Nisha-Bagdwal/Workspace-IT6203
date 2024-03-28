@@ -1,12 +1,14 @@
-import { Component, inject, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
+import { Component, inject, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
-
+import { StudentInfoService } from '../student-info.service';
+import { DriverService } from '../driver.service';
 
 @Component({
   selector: 'app-driver-form',
@@ -20,12 +22,16 @@ import { MatCardModule } from '@angular/material/card';
     MatCardModule,
     ReactiveFormsModule,
     CommonModule,
+    HttpClientModule,
     NgxMatTimepickerModule,
-  ]
+  ],
+  providers: [StudentInfoService, DriverService]
 })
 
 export class DriverFormComponent {
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder,
+    private _myService: StudentInfoService,
+    private _myDriverService: DriverService) { }
 
   profileForm = this.formBuilder.group({
     studentId: ['', Validators.required],
@@ -62,45 +68,35 @@ export class DriverFormComponent {
   }
 
   onSubmit() {
-    // TODO: Use EventEmitter with form value
-    console.warn(this.profileForm.value);
+    console.log(this.profileForm.value);
+    this._myDriverService.addDriver(this.profileForm.value);
   }
-
-  studentMap: { [key: string]: { firstName: string; lastName: string; phone: string; email: string; }
-  } = {
-    '123': {
-      firstName: 'John',
-      lastName: 'Doe',
-      phone: '1234567890',
-      email: 'john.doe@example.com'
-    },
-    '321': {
-      firstName: 'Annie',
-      lastName: 'Frank',
-      phone: '6789012345',
-      email: 'annie.frank@example.com'
-    }
-  };
 
   onStudentIdChange(): void {
     const studentId = this.profileForm.get('studentId')?.value;
     if (studentId) {
-      const student = this.studentMap[studentId];
-      if (student) {
-        this.profileForm.patchValue({
-          firstName: student.firstName,
-          lastName: student.lastName,
-          phone: student.phone,
-          email: student.email
-        });
-      }else{
-        this.profileForm.patchValue({
-          firstName: '',
-          lastName: '',
-          phone: '',
-          email: ''
-        });
-      }
+      this._myService.getStudentInfo(studentId).subscribe({
+        next: (studentInfo: any) => {
+          console.log("studentInfo : " + studentInfo)
+          if (studentInfo) {
+            this.profileForm.patchValue({
+              firstName: studentInfo.firstName,
+              lastName: studentInfo.lastName,
+              phone: studentInfo.phone,
+              email: studentInfo.email
+            });
+          } else {
+            this.profileForm.patchValue({
+              firstName: '',
+              lastName: '',
+              phone: '',
+              email: ''
+            });
+          }
+        },
+        error: (err => console.error(err)),
+        complete: (() => console.log('finished loading'))
+      });
     }
   }
 }
