@@ -10,12 +10,33 @@ export class DriverService {
 
     constructor(private http: HttpClient) { }
 
-    //Uses http.post() to post data 
-    addDriver(driver : any) {
+    addDriver(driver: any) {
         this.http.post('http://localhost:8000/registerDriver', driver)
             .subscribe((responseData) => {
-                console.log(responseData);
+                console.log("Registered: "+ responseData);
             });
-            location.reload();
+    }
+
+    getDrivers() {
+        return this.http.get('http://localhost:8000/listDrivers/');
+    }
+
+    getDriver(driverId: string) {
+        return this.http.get('http://localhost:8000/driver/' + driverId);
+    }
+
+    deleteDriver(driverId: string) {
+        this.http.delete("http://localhost:8000/driver/" + driverId)
+            .subscribe(() => {
+                console.log('Deleted: ' + driverId);
+            });
+        location.reload();
+    }
+
+    updateDriver(driverId: string, driver: any) {
+        return this.http.put("http://localhost:8000/driver/" + driverId, driver)
+            .subscribe((responseData) => {
+                console.log("Updated: " + responseData);
+            });
     }
 }

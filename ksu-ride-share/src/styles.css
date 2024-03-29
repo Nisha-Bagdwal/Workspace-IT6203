@@ -27,6 +27,10 @@
     margin-right: 0;
   }
   
+  mat-card{
+    margin: 10px;
+  }
+  
   mat-card-title{
     color: rgb(104, 103, 103);
     padding-bottom: 10px;
@@ -50,5 +54,11 @@
     border: 1px solid #c9c7c7;
     border-radius: 5px;
   }
+
+  .action-button {
+    margin-left: 10px;
+    font-weight: bold;
+  }
+
   html, body { height: 100%; }
   body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

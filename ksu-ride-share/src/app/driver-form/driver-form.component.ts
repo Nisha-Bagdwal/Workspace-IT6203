@@ -9,6 +9,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { StudentInfoService } from '../student-info.service';
 import { DriverService } from '../driver.service';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-driver-form',
@@ -24,14 +28,71 @@ import { DriverService } from '../driver.service';
     CommonModule,
     HttpClientModule,
     NgxMatTimepickerModule,
+    MatSidenavModule,
+    MatSnackBarModule
   ],
   providers: [StudentInfoService, DriverService]
 })
 
 export class DriverFormComponent {
+
+  public mode = 'Add'; //default mode
+  private id: any; //driver ID
+  private driver: any;
+
+  action = "Register";
+
   constructor(private formBuilder: FormBuilder,
     private _myService: StudentInfoService,
-    private _myDriverService: DriverService) { }
+    private _myDriverService: DriverService,
+    private router: Router,
+    public route: ActivatedRoute
+  ) { }
+
+  ngOnInit() {
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      if (paramMap.has('_id')) {
+        this.mode = 'Edit';
+        this.action = 'Update';
+        this.id = paramMap.get('_id');
+
+        this._myDriverService.getDriver(this.id).subscribe({
+          next: (data => {
+            this.driver = data;
+            this.profileForm.patchValue({
+              studentId: this.driver.studentId,
+              firstName: this.driver.firstName,
+              lastName: this.driver.lastName,
+              email: this.driver.email,
+              phone: this.driver.phone,
+              carInfo: {
+                licensePlateNumber: this.driver.carInfo.licensePlateNumber,
+                carMake: this.driver.carInfo.carMake,
+                carModel: this.driver.carInfo.carModel,
+                carColor: this.driver.carInfo.carColor
+              }
+            });
+
+            (this.profileForm.get('availabilities') as FormArray).clear();
+
+            this.driver.availabilities.forEach((availability: any) => {
+              const availabilityFormGroup = this.createAvailabilityFormGroup();
+              availabilityFormGroup.patchValue(availability);
+              (this.profileForm.get('availabilities') as FormArray).push(availabilityFormGroup);
+            });
+          }),
+
+          error: (err => console.error(err)),
+          complete: (() => console.log('finished loading'))
+        });
+      }
+      else {
+        this.mode = 'Add';
+        this.action = "Register";
+        this.id = null;
+      }
+    });
+  }
 
   profileForm = this.formBuilder.group({
     studentId: ['', Validators.required],
@@ -69,7 +130,13 @@ export class DriverFormComponent {
 
   onSubmit() {
     console.log(this.profileForm.value);
-    this._myDriverService.addDriver(this.profileForm.value);
+
+    if (this.mode == 'Add')
+      this._myDriverService.addDriver(this.profileForm.value);
+    if (this.mode == 'Edit')
+      this._myDriverService.updateDriver(this.id, this.profileForm.value)
+
+    this.router.navigate(['/listDrivers']);
   }
 
   onStudentIdChange(): void {

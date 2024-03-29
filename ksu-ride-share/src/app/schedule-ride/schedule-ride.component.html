@@ -1,7 +1,7 @@
 <div class="header">
     <h1>Schedule A Ride</h1>
 </div>
-<form [formGroup]="profileForm" novalidate (ngSubmit)="onSubmit()">
+<form [formGroup]="profileForm">
     <mat-card class="form-card">
         <mat-card-header>
             <mat-card-title>Rider Information</mat-card-title>
@@ -117,7 +117,7 @@
         </div>
         <mat-card-actions>
             <button mat-raised-button color="primary" type="submit" style="width: 100%;"
-                [disabled]="!profileForm.valid">Search Available Rides</button>
+                [disabled]="!profileForm.valid" (click)="onSubmit()">Search Available Rides</button>
         </mat-card-actions>
     </mat-card>
 </form>

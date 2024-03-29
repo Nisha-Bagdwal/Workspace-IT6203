@@ -1,0 +1,28 @@
+<div class="header">
+  <h1>Registered Drivers</h1>
+</div>
+<mat-card *ngFor="let driver of drivers; let i = index">
+  <mat-card-header>
+    <mat-card-title>{{driver.firstName}} {{driver.lastName}}</mat-card-title>
+    <!-- <mat-card-subtitle>Index: {{i}}</mat-card-subtitle> -->
+  </mat-card-header>
+  <mat-card-content>
+    <p>Student ID: {{driver.studentId}}</p>
+    <p>Email: {{driver.email}}</p>
+    <p>Phone: {{driver.phone}}</p>
+    <p>Car Info: {{driver.carInfo.licensePlateNumber}}, {{driver.carInfo.carMake}}, {{driver.carInfo.carModel}},
+      {{driver.carInfo.carColor}}</p>
+    <p>Availabilities:</p>
+    <ul>
+      <li *ngFor="let availability of driver.availabilities">
+        From: {{availability.sourceCampus}}, To: {{availability.destinationCampus}}, On: {{availability.availableDay}},
+        At: {{availability.availableTime}}
+      </li>
+    </ul>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button color="warn" class="action-button" (click)="deleteDriver(driver._id)">DELETE</button>
+    <button mat-button color="primary" class="action-button"
+      [routerLink]="['/updateDriver', driver._id]">UPDATE</button>
+  </mat-card-actions>
+</mat-card>

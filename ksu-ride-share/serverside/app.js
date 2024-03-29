@@ -13,7 +13,6 @@ mongoose.connect('mongodb://localhost:27017/KSURideShare')
 
 //specify which domains can make requests and which methods are allowed
 app.use((req, res, next) => {
-    console.log('This line is always called');
     res.setHeader('Access-Control-Allow-Origin', '*'); //can connect from any host
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS, DELETE'); //allowable methods
     res.setHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept');
@@ -30,7 +29,7 @@ app.use(bodyParser.json())
 //by adding /students, we tell the server that this method will be called every time http://localhost:8000/students is requested. 
 app.get('/studentinfo/:id', (req, res, next) => {
     //call mongoose method find (MongoDB db.Students.find())
-    StudentInfo.findOne({studentId : req.params.id})
+    StudentInfo.findOne({ studentId: req.params.id })
         //if data is returned, send data as a response 
         .then(data => res.status(200).json(data))
         //if error, send internal server error
@@ -41,8 +40,22 @@ app.get('/studentinfo/:id', (req, res, next) => {
 
 });
 
+app.get('/driver/:id', (req, res, next) => {
+    //call mongoose method findOne (MongoDB db.Students.findOne())
+    Driver.findOne({ _id: req.params.id })
+        //if data is returned, send data as a response 
+        .then(data => {
+            res.status(200).json(data)
+        })
+        //if error, send internal server error
+        .catch(err => {
+            console.log('Error: ${err}');
+            res.status(500).json(err);
+        });
+});
+
 app.post('/registerDriver', (req, res, next) => {
-    
+
     // Extract form data
     const { studentId, firstName, lastName, email, phone, carInfo, availabilities } = req.body;
 
@@ -78,6 +91,66 @@ app.delete("/students/:id", (req, res, next) => {
         console.log(result);
         res.status(200).json("Deleted!");
     });
+});
+
+app.get('/listDrivers', (req, res, next) => {
+    //call mongoose method find (MongoDB db.Students.find())
+    Driver.find()
+        //if data is returned, send data as a response 
+        .then(data => res.status(200).json(data))
+        //if error, send internal server error
+        .catch(err => {
+            console.log('Error: ${err}');
+            res.status(500).json(err);
+        });
+
+});
+
+app.delete("/driver/:id", (req, res, next) => {
+    Driver.deleteOne({ _id: req.params.id }).then(result => {
+        console.log(result);
+        res.status(200).json("Deleted!");
+    });
+});
+
+app.put('/driver/:id', (req, res, next) => {
+    console.log("id: " + req.params.id)
+    // check that the parameter id is valid 
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        //find a document and set new first and last names 
+        Driver.findOneAndUpdate(
+            { _id: req.params.id },
+            {
+                $set: {
+                    studentId: req.body.studentId,
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
+                    email: req.body.email,
+                    phone: req.body.phone,
+                    carInfo: {
+                        licensePlateNumber: req.body.carInfo.licensePlateNumber,
+                        carMake: req.body.carInfo.carMake,
+                        carModel: req.body.carInfo.carModel,
+                        carColor: req.body.carInfo.carColor,
+                    },
+                    availabilities: req.body.availabilities
+                }
+            },
+            { new: true }
+        )
+            .then((driver) => {
+                if (driver) { //what was updated 
+                    console.log(driver);
+                } else {
+                    console.log("no data exist for this driver id");
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    } else {
+        console.log("please provide correct id");
+    }
 });
 
 //to use this middleware in other parts of the application

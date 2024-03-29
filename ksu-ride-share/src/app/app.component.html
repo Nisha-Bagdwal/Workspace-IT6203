@@ -1,3 +1,13 @@
-<!-- <app-driver-component></app-driver-component> -->
-<app-driver-form></app-driver-form>
-<app-schedule-ride></app-schedule-ride>
+<mat-sidenav-container class="example-container">
+    <mat-sidenav mode="side" opened>
+        <img src="./assets/ksu.png" alt="Your Image" class="sidenav-image">
+        <mat-nav-list>
+            <a mat-list-item routerLink="">Home</a>
+            <a mat-list-item routerLink="registerDriver">Register Driver</a>
+            <a mat-list-item routerLink="listDrivers">Registered Drivers</a>
+            <a mat-list-item routerLink="scheduleRide">Schedule a Ride</a>
+            <a mat-list-item routerLink=".">Scheduled Rides</a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content><router-outlet></router-outlet></mat-sidenav-content>
+</mat-sidenav-container>

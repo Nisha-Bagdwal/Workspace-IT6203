@@ -30,22 +30,22 @@ export class StudentFormComponent {
       if (paramMap.has('_id')) {
         this.mode = 'Edit'; /*request had a parameter _id */
         this.id = paramMap.get('_id');
-        
+
         //request student info based on the id
         this._myService.getStudent(this.id).subscribe({
           next: (data => {
-              //read data and assign to private variable student
-              this.student = data;
-              //populate the firstName and lastName on the page
-              this.studentForm.patchValue({
-                  firstName: this.student.firstName,
-                  lastName: this.student.lastName
-              })
+            //read data and assign to private variable student
+            this.student = data;
+            //populate the firstName and lastName on the page
+            this.studentForm.patchValue({
+              firstName: this.student.firstName,
+              lastName: this.student.lastName
+            })
           }),
 
           error: (err => console.error(err)),
           complete: (() => console.log('finished loading'))
-      });
+        });
       }
       else {
         this.mode = 'Add';
