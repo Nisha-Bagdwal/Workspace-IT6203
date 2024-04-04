@@ -4,8 +4,9 @@ const bodyParser = require('body-parser');
 
 const mongoose = require('mongoose');
 //specify where to find the schema
-const StudentInfo = require('./models/studentinfo')
-const Driver = require('./models/driver')
+const StudentInfo = require('./models/studentinfo');
+const Driver = require('./models/driver');
+const Ride = require('./models/ride');
 //connect and display the status 
 mongoose.connect('mongodb://localhost:27017/KSURideShare')
     .then(() => { console.log("connected"); })
@@ -25,8 +26,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 //parse application/json
 app.use(bodyParser.json())
 
-//in the app.get() method below we add a path for the students API 
-//by adding /students, we tell the server that this method will be called every time http://localhost:8000/students is requested. 
 app.get('/studentinfo/:id', (req, res, next) => {
     //call mongoose method find (MongoDB db.Students.find())
     StudentInfo.findOne({ studentId: req.params.id })
@@ -41,7 +40,6 @@ app.get('/studentinfo/:id', (req, res, next) => {
 });
 
 app.get('/driver/:id', (req, res, next) => {
-    //call mongoose method findOne (MongoDB db.Students.findOne())
     Driver.findOne({ _id: req.params.id })
         //if data is returned, send data as a response 
         .then(data => {
@@ -94,7 +92,6 @@ app.delete("/students/:id", (req, res, next) => {
 });
 
 app.get('/listDrivers', (req, res, next) => {
-    //call mongoose method find (MongoDB db.Students.find())
     Driver.find()
         //if data is returned, send data as a response 
         .then(data => res.status(200).json(data))
@@ -140,7 +137,7 @@ app.put('/driver/:id', (req, res, next) => {
         )
             .then((driver) => {
                 if (driver) { //what was updated 
-                    console.log(driver);
+                    res.status(200).json("Updated!");
                 } else {
                     console.log("no data exist for this driver id");
                 }
@@ -152,6 +149,142 @@ app.put('/driver/:id', (req, res, next) => {
         console.log("please provide correct id");
     }
 });
+
+app.post('/searchAvailableRides', (req, res, next) => {
+
+    const sourceCampus = req.body.searchRide.sourceCampus;
+    const destinationCampus = req.body.searchRide.destinationCampus;
+    const dayOfRide = req.body.searchRide.dayOfRide;
+
+    // Find drivers with matching availabilities
+    Driver.find({
+        'availabilities.sourceCampus': sourceCampus,
+        'availabilities.destinationCampus': destinationCampus,
+        'availabilities.availableDay': dayOfRide,
+    })
+        .then(availableDrivers => {
+            console.log("availableDrivers " + availableDrivers);
+            // Create an array to store available rides
+            const availableRides = [];
+
+            // Loop through each driver
+            availableDrivers.forEach(driver => {
+                // Loop through each availability of the driver
+                driver.availabilities.forEach(availability => {
+                    if (
+                        availability.sourceCampus === sourceCampus &&
+                        availability.destinationCampus === destinationCampus &&
+                        availability.availableDay === dayOfRide
+                    ) {
+                        // Availability matches the ride information
+                        availableRides.push({
+                            driverId: driver._id,
+                            firstName: driver.firstName,
+                            lastName: driver.lastName,
+                            email: driver.email,
+                            phone: driver.phone,
+                            carInfo: driver.carInfo,
+                            availability: availability,
+                        });
+                    }
+                });
+            });
+
+            res.status(200).json(availableRides);
+        })
+        .catch(error => {
+            console.error('Error searching for rides:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        });
+
+});
+
+app.post('/bookRide', (req, res, next) => {
+
+    const { ride, rider } = req.body;
+
+    // Create a new Driver instance
+    const rideBooked = new Ride({
+        ride,
+        rider
+    });
+
+    //send the document to the database 
+    rideBooked.save()
+        //in case of success
+        .then(() => {
+            console.log('Ride booked ' + rideBooked.ride.firstName + " " + rideBooked.ride.lastName);
+            //sent an acknowledgment back to caller 
+            res.status(201).json('Post successful');
+        })
+        .catch(err => {
+            console.log('Error:' + err);
+            //sent an error back to caller 
+            res.status(500).json(err);
+        });
+});
+
+app.get('/getScheduledRides', (req, res, next) => {
+    Ride.find()
+        //if data is returned, send data as a response 
+        .then(data => res.status(200).json(data))
+        //if error, send internal server error
+        .catch(err => {
+            console.log(err);
+            res.status(500).json(err);
+        });
+
+});
+
+app.delete("/ride/:id", (req, res, next) => {
+    Ride.deleteOne({ _id: req.params.id }).then(result => {
+        console.log(result);
+        res.status(200).json("Deleted!");
+    });
+});
+
+app.put('/ride/:id', (req, res, next) => {
+    console.log("id: " + req.params.id)
+    // check that the parameter id is valid 
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        Ride.findOneAndUpdate(
+            { _id: req.params.id },
+            {
+                $set: {
+                    ride: req.body.ride,
+                    rider: req.body.rider
+                }
+            },
+            { new: true }
+        )
+            .then((ride) => {
+                if (ride) { //what was updated 
+                    res.status(200).json("Updated!");
+                } else {
+                    console.log("no data exist for this ride id");
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    } else {
+        console.log("please provide correct id");
+    }
+});
+
+app.get('/ride/:id', (req, res, next) => {
+    Ride.findOne({ _id: req.params.id })
+        //if data is returned, send data as a response 
+        .then(data => {
+            res.status(200).json(data)
+        })
+        //if error, send internal server error
+        .catch(err => {
+            console.log('Error: ${err}');
+            res.status(500).json(err);
+        });
+});
+
 
 //to use this middleware in other parts of the application
 module.exports = app;

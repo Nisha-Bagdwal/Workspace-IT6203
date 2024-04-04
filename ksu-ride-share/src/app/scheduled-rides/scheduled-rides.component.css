@@ -1,0 +1,25 @@
+mat-card {
+    display: flex;
+    flex-direction: row;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 2%;
+}
+
+mat-card-content {
+    flex: 2;
+    /* Example: Content takes twice the space as actions */
+    padding: 1.5%;
+}
+
+mat-card-actions {
+    flex: 1;
+    /* Example: Actions take half the space as content */
+    padding: 1.5%;
+}
+
+mat-card-title {
+    color: rgb(104, 103, 103);
+    padding-bottom: 10px;
+    font-size: medium;
+}

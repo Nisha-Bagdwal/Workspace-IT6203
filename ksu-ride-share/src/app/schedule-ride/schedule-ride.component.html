@@ -1,5 +1,5 @@
 <div class="header">
-    <h1>Schedule A Ride</h1>
+    <h1>{{action}} A Ride</h1>
 </div>
 <form [formGroup]="profileForm">
     <mat-card class="form-card">
@@ -56,7 +56,7 @@
             </div>
         </mat-card-content>
 
-        <div formGroupName="scheduledRide">
+        <div formGroupName="searchRide">
             <mat-card-header>
                 <mat-card-title>Schedule a Ride</mat-card-title>
             </mat-card-header>
@@ -68,7 +68,7 @@
                                 <mat-option value="Kennesaw">Kennesaw</mat-option>
                                 <mat-option value="Marietta">Marietta</mat-option>
                             </mat-select>
-                            @if (profileForm.get('scheduledRide.sourceCampus')?.hasError('required')) {
+                            @if (profileForm.get('searchRide.sourceCampus')?.hasError('required')) {
                             <mat-error>Source Campus is <strong>required</strong></mat-error>
                             }
                         </mat-form-field>
@@ -79,7 +79,7 @@
                                 <mat-option value="Kennesaw">Kennesaw</mat-option>
                                 <mat-option value="Marietta">Marietta</mat-option>
                             </mat-select>
-                            @if (profileForm.get('scheduledRide.destinationCampus')?.hasError('required')) {
+                            @if (profileForm.get('searchRide.destinationCampus')?.hasError('required')) {
                             <mat-error>Destination Campus is <strong>required</strong></mat-error>
                             }
                         </mat-form-field>
@@ -97,7 +97,7 @@
                                 <mat-option value="Saturday">Saturday</mat-option>
                                 <mat-option value="Sunday">Sunday</mat-option>
                             </mat-select>
-                            @if (profileForm.get('scheduledRide.dayOfRide')?.hasError('required')) {
+                            @if (profileForm.get('searchRide.dayOfRide')?.hasError('required')) {
                             <mat-error>Day of Ride is <strong>required</strong></mat-error>
                             }
                         </mat-form-field>
@@ -106,7 +106,7 @@
                         <mat-form-field class="full-width">
                             <input matInput name="selected_time_A" [ngxMatTimepicker]="pickerA"
                                 placeholder="Time of Ride" formControlName="timeOfRide" readonly />
-                            @if (profileForm.get('scheduledRide.timeOfRide')?.hasError('required')) {
+                            @if (profileForm.get('searchRide.timeOfRide')?.hasError('required')) {
                             <mat-error>Time of Ride is <strong>required</strong></mat-error>
                             }
                         </mat-form-field>
@@ -116,8 +116,27 @@
             </mat-card-content>
         </div>
         <mat-card-actions>
-            <button mat-raised-button color="primary" type="submit" style="width: 100%;"
-                [disabled]="!profileForm.valid" (click)="onSubmit()">Search Available Rides</button>
+            <button mat-raised-button color="primary" type="submit" style="width: 100%;" [disabled]="!profileForm.valid"
+                (click)="onSubmit()">Search Available Rides</button>
         </mat-card-actions>
     </mat-card>
+    <div *ngFor="let ride of availableRides">
+        <mat-card class="form-card">
+            <mat-card-title>{{ ride.firstName }} {{ ride.lastName }} 
+                <button mat-raised-button color="primary"
+                    (click)="bookRide(ride)">{{action}} Ride</button>
+            </mat-card-title>
+            <mat-card-content>
+                <p>Email: {{ ride.email }}</p>
+                <p>Phone: {{ ride.phone }}</p>
+                <p>Car Info: {{ ride.carInfo.licensePlateNumber }}, {{ ride.carInfo.carMake }}, {{ ride.carInfo.carModel
+                    }}, {{ ride.carInfo.carColor }}</p>
+                <p>Availability: From: {{ ride.availability.sourceCampus }},
+                    To: {{ ride.availability.destinationCampus }},
+                    On: {{ ride.availability.availableDay }},
+                    At: {{ ride.availability.availableTime }}
+                </p>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </form>
