@@ -34,6 +34,13 @@ export class ScheduledRidesComponent {
           horizontalPosition: 'end',
           verticalPosition: 'top',
         });
+      }else if (params['formSubmitted'] === 'Updated') {
+        // Show the snackbar
+        this.snackBar.open('Ride updated successfully!', 'Dismiss', {
+          duration: 4000, // Display for 4 seconds
+          horizontalPosition: 'end',
+          verticalPosition: 'top',
+        });
       }
     });
   }

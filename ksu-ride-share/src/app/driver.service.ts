@@ -11,10 +11,7 @@ export class DriverService {
     constructor(private http: HttpClient) { }
 
     addDriver(driver: any) {
-        this.http.post('http://localhost:8000/registerDriver', driver)
-            .subscribe((responseData) => {
-                console.log("Registered: "+ responseData);
-            });
+        return this.http.post('http://localhost:8000/registerDriver', driver);
     }
 
     getDrivers() {
@@ -26,17 +23,10 @@ export class DriverService {
     }
 
     deleteDriver(driverId: string) {
-        this.http.delete("http://localhost:8000/driver/" + driverId)
-            .subscribe(() => {
-                console.log('Deleted: ' + driverId);
-            });
-        location.reload();
+        return this.http.delete("http://localhost:8000/driver/" + driverId);
     }
 
     updateDriver(driverId: string, driver: any) {
-        return this.http.put("http://localhost:8000/driver/" + driverId, driver)
-            .subscribe((responseData) => {
-                console.log("Updated: " + responseData);
-            });
+        return this.http.put("http://localhost:8000/driver/" + driverId, driver);
     }
 }

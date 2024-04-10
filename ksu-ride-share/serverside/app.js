@@ -68,11 +68,24 @@ app.post('/registerDriver', (req, res, next) => {
         availabilities,
     });
 
+    const studentinfo = new StudentInfo({
+        studentId,
+        firstName,
+        lastName,
+        phone,
+        email
+    });
+
     //send the document to the database 
     driver.save()
         //in case of success
         .then(() => {
             console.log('Registered ' + driver.firstName + " " + driver.lastName);
+            //save information of driver as student in student info table
+            studentinfo.save().then(() => console.log("Student Info Saved " + driver.firstName + " " + driver.lastName))
+                .catch(err => {
+                    console.log('Error:' + err);
+                });
             //sent an acknowledgment back to caller 
             res.status(201).json('Post successful');
         })
@@ -86,7 +99,6 @@ app.post('/registerDriver', (req, res, next) => {
 //:id is a dynamic parameter that will be extracted from the URL
 app.delete("/students/:id", (req, res, next) => {
     Student.deleteOne({ _id: req.params.id }).then(result => {
-        console.log(result);
         res.status(200).json("Deleted!");
     });
 });
@@ -105,7 +117,6 @@ app.get('/listDrivers', (req, res, next) => {
 
 app.delete("/driver/:id", (req, res, next) => {
     Driver.deleteOne({ _id: req.params.id }).then(result => {
-        console.log(result);
         res.status(200).json("Deleted!");
     });
 });
@@ -163,7 +174,6 @@ app.post('/searchAvailableRides', (req, res, next) => {
         'availabilities.availableDay': dayOfRide,
     })
         .then(availableDrivers => {
-            console.log("availableDrivers " + availableDrivers);
             // Create an array to store available rides
             const availableRides = [];
 
@@ -203,10 +213,20 @@ app.post('/bookRide', (req, res, next) => {
 
     const { ride, rider } = req.body;
 
-    // Create a new Driver instance
+    // Create a new ride instance
     const rideBooked = new Ride({
         ride,
         rider
+    });
+
+    const { studentId, firstName, lastName, phone, email} = req.body.rider;
+
+    const studentinfo = new StudentInfo({
+        studentId,
+        firstName,
+        lastName,
+        phone,
+        email
     });
 
     //send the document to the database 
@@ -214,6 +234,13 @@ app.post('/bookRide', (req, res, next) => {
         //in case of success
         .then(() => {
             console.log('Ride booked ' + rideBooked.ride.firstName + " " + rideBooked.ride.lastName);
+
+             //save information of driver as student in student info table
+             studentinfo.save().then(() => console.log("Student Info Saved "  + rideBooked.ride.firstName + " " + rideBooked.ride.lastName))
+             .catch(err => {
+                 console.log('Error:' + err);
+             });
+
             //sent an acknowledgment back to caller 
             res.status(201).json('Post successful');
         })
@@ -238,7 +265,6 @@ app.get('/getScheduledRides', (req, res, next) => {
 
 app.delete("/ride/:id", (req, res, next) => {
     Ride.deleteOne({ _id: req.params.id }).then(result => {
-        console.log(result);
         res.status(200).json("Deleted!");
     });
 });

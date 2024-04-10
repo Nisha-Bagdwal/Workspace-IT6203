@@ -13,6 +13,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-driver-form',
@@ -46,10 +47,23 @@ export class DriverFormComponent {
     private _myService: StudentInfoService,
     private _myDriverService: DriverService,
     private router: Router,
+    private snackBar: MatSnackBar,
     public route: ActivatedRoute
   ) { }
 
   ngOnInit() {
+
+    this.route.queryParams.subscribe((params) => {
+      if (params['formSubmitted'] === 'Registered') {
+        // Show the snackbar
+        this.snackBar.open('Driver registered successfully!', 'Dismiss', {
+          duration: 4000, // Display for 4 seconds
+          horizontalPosition: 'end',
+          verticalPosition: 'top',
+        });
+      }
+    });
+
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('_id')) {
         this.mode = 'Edit';
@@ -128,15 +142,32 @@ export class DriverFormComponent {
     return this.profileForm.get('availabilities') as FormArray;
   }
 
+  deleteAvailability(index: number): void {
+    (this.profileForm.get('availabilities') as FormArray).removeAt(index);
+  }
+
   onSubmit() {
     console.log(this.profileForm.value);
 
-    if (this.mode == 'Add')
-      this._myDriverService.addDriver(this.profileForm.value);
-    if (this.mode == 'Edit')
-      this._myDriverService.updateDriver(this.id, this.profileForm.value)
-
-    this.router.navigate(['/listDrivers']);
+    if (this.mode == 'Add') {
+      this._myDriverService.addDriver(this.profileForm.value).subscribe({
+        next: (response: any) => {
+          console.log("Response Driver Registration : " + response);
+          const queryParams = { formSubmitted: 'Registered' };
+          location.href = this.router.createUrlTree(['/registerDriver'], { queryParams }).toString();
+        },
+        error: (err => console.error(err))
+      });
+    } else if (this.mode == 'Edit') {
+      this._myDriverService.updateDriver(this.id, this.profileForm.value).subscribe({
+        next: (response: any) => {
+          console.log("Response Driver Update : " + response);
+          const queryParams = { formSubmitted: 'Updated' };
+          location.href = this.router.createUrlTree(['/listDrivers'], { queryParams }).toString();
+        },
+        error: (err => console.error(err))
+      });
+    }
   }
 
   onStudentIdChange(): void {

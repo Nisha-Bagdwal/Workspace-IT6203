@@ -55,13 +55,6 @@ export class ScheduleRideComponent implements OnInit {
           horizontalPosition: 'end',
           verticalPosition: 'top',
         });
-      }else if (params['formSubmitted'] === 'Updated') {
-        // Show the snackbar
-        this.snackBar.open('Ride updated successfully!', 'Dismiss', {
-          duration: 4000, // Display for 4 seconds
-          horizontalPosition: 'end',
-          verticalPosition: 'top',
-        });
       }
     });
 
@@ -150,7 +143,7 @@ export class ScheduleRideComponent implements OnInit {
         next: (response: any) => {
           console.log("Response Update Ride : " + response);
           const queryParams = { formSubmitted: 'Updated' };
-          location.href = this.router.createUrlTree(['/scheduleRide'], { queryParams }).toString();
+          location.href = this.router.createUrlTree(['/scheduledRides'], { queryParams }).toString();
         },
         error: (err => console.error(err))
       });

@@ -56,12 +56,16 @@ h4 {
   padding-top: 15px;
   margin-bottom: 10px;
   border: 1px solid #c9c7c7;
-  border-radius: 5px;
+  border-radius: 1px;
 }
 
 .action-button {
   margin-left: 10px;
   font-weight: bold;
+}
+
+.delete-button-container {
+  text-align: right;
 }
 
 html,
