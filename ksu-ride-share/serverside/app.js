@@ -1,3 +1,7 @@
+
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey("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")
+
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -8,7 +12,12 @@ const StudentInfo = require('./models/studentinfo');
 const Driver = require('./models/driver');
 const Ride = require('./models/ride');
 //connect and display the status 
-mongoose.connect('mongodb://localhost:27017/KSURideShare')
+// mongoose.connect('mongodb://localhost:27017/KSURideShare')
+//     .then(() => { console.log("connected"); })
+//     .catch(() => { console.log("error connecting"); });
+
+
+mongoose.connect('mongodb+srv://nisha-it6203:Tweety.240295@cluster1.swel2wj.mongodb.net/KSURideShare?retryWrites=true&w=majority&appName=Cluster1')
     .then(() => { console.log("connected"); })
     .catch(() => { console.log("error connecting"); });
 
@@ -86,6 +95,8 @@ app.post('/registerDriver', (req, res, next) => {
                 .catch(err => {
                     console.log('Error:' + err);
                 });
+
+            sendEmailUsingSendGrid(driver.email, "Driver Registered", "Dear "+driver.firstName + " " + driver.lastName+",\n\nYou are successfully registered in the KSU Rideshare app.\n\nBest Regards,\nKSU Rideshare Team");
             //sent an acknowledgment back to caller 
             res.status(201).json('Post successful');
         })
@@ -95,6 +106,23 @@ app.post('/registerDriver', (req, res, next) => {
             res.status(500).json(err);
         });
 });
+
+function sendEmailUsingSendGrid(toEmail, subjectText, content){
+    const msg = {
+        to: toEmail, 
+        from: 'ksurideshare@gmail.com',
+        subject: subjectText,
+        text: content
+      }
+      sgMail
+        .send(msg)
+        .then(() => {
+          console.log('Email sent')
+        })
+        .catch((error) => {
+          console.error(error)
+        });
+}
 
 //:id is a dynamic parameter that will be extracted from the URL
 app.delete("/students/:id", (req, res, next) => {
@@ -147,7 +175,8 @@ app.put('/driver/:id', (req, res, next) => {
             { new: true }
         )
             .then((driver) => {
-                if (driver) { //what was updated 
+                if (driver) { 
+                    sendEmailUsingSendGrid(driver.email, "Driver Information Updated", "Dear "+driver.firstName + " " + driver.lastName+",\n\nYour registration information is successfully updated in the KSU Rideshare app.\n\nBest Regards,\nKSU Rideshare Team");
                     res.status(200).json("Updated!");
                 } else {
                     console.log("no data exist for this driver id");
@@ -233,14 +262,16 @@ app.post('/bookRide', (req, res, next) => {
     rideBooked.save()
         //in case of success
         .then(() => {
-            console.log('Ride booked ' + rideBooked.ride.firstName + " " + rideBooked.ride.lastName);
+            console.log('Ride booked ' + rideBooked.rider.firstName + " " + rideBooked.rider.lastName);
 
              //save information of driver as student in student info table
-             studentinfo.save().then(() => console.log("Student Info Saved "  + rideBooked.ride.firstName + " " + rideBooked.ride.lastName))
+             studentinfo.save().then(() => console.log("Student Info Saved "  + rideBooked.rider.firstName + " " + rideBooked.rider.lastName))
              .catch(err => {
                  console.log('Error:' + err);
              });
 
+            sendEmailUsingSendGrid(rideBooked.rider.email, "Ride Booked Successfully", "Dear "+rideBooked.rider.firstName + " " + rideBooked.rider.lastName + ",\n\nYour ride has been booked successfully in the KSU Rideshare app. Below are your ride details:\n\nSource Campus: "+ rideBooked.ride.availability.sourceCampus +"\nDestination Campus: "+ rideBooked.ride.availability.destinationCampus + "\nDay of Ride: "+ rideBooked.ride.availability.availableDay +"\nTime of Ride: "+ rideBooked.ride.availability.availableTime +"\n\nDriver's Name: "+ rideBooked.ride.firstName +" "+ rideBooked.ride.lastName +"\nDriver's Phone: "+ rideBooked.ride.phone +"\nDriver's Email: "+ rideBooked.ride.email +"\n\nVehicle Information: "+ rideBooked.ride.carInfo.carMake +" "+ rideBooked.ride.carInfo.carModel +"\nVehicle Color: "+ rideBooked.ride.carInfo.carColor +"\nLicense Plate Number: "+ rideBooked.ride.carInfo.licensePlateNumber +"\n\nWe hope you have a wonderful ride.\n\nBest Regards,\nKSU Rideshare Team");
+            sendEmailUsingSendGrid(rideBooked.ride.email, "A Ride Booked With You", "Dear "+rideBooked.ride.firstName + " " + rideBooked.ride.lastName + ",\n\nA ride has been booked with you in the KSU Rideshare app. Below are your ride and rider details:\n\nSource Campus: "+ rideBooked.ride.availability.sourceCampus +"\nDestination Campus: "+ rideBooked.ride.availability.destinationCampus + "\nDay of Ride: "+ rideBooked.ride.availability.availableDay +"\nTime of Ride: "+ rideBooked.ride.availability.availableTime +"\n\nRider's Name: "+ rideBooked.rider.firstName +" "+ rideBooked.rider.lastName +"\nRider's Phone: "+ rideBooked.rider.phone +"\nRider's Email: "+ rideBooked.rider.email +"\n\nWe hope you have a wonderful ride.\n\nBest Regards,\nKSU Rideshare Team");
             //sent an acknowledgment back to caller 
             res.status(201).json('Post successful');
         })
@@ -283,8 +314,10 @@ app.put('/ride/:id', (req, res, next) => {
             },
             { new: true }
         )
-            .then((ride) => {
-                if (ride) { //what was updated 
+            .then((rideBooked) => {
+                if (rideBooked) {
+                    sendEmailUsingSendGrid(rideBooked.rider.email, "Ride Updated Successfully", "Dear "+rideBooked.rider.firstName + " " + rideBooked.rider.lastName + ",\n\nYour ride has been updated successfully in the KSU Rideshare app. Below are your ride details:\n\nSource Campus: "+ rideBooked.ride.availability.sourceCampus +"\nDestination Campus: "+ rideBooked.ride.availability.destinationCampus + "\nDay of Ride: "+ rideBooked.ride.availability.availableDay +"\nTime of Ride: "+ rideBooked.ride.availability.availableTime +"\n\nDriver's Name: "+ rideBooked.ride.firstName +" "+ rideBooked.ride.lastName +"\nDriver's Phone: "+ rideBooked.ride.phone +"\nDriver's Email: "+ rideBooked.ride.email +"\n\nVehicle Information: "+ rideBooked.ride.carInfo.carMake +" "+ rideBooked.ride.carInfo.carModel +"\nVehicle Color: "+ rideBooked.ride.carInfo.carColor +"\nLicense Plate Number: "+ rideBooked.ride.carInfo.licensePlateNumber +"\n\nWe hope you have a wonderful ride.\n\nBest Regards,\nKSU Rideshare Team");
+                    sendEmailUsingSendGrid(rideBooked.ride.email, "A Ride Booked With You Has Updated", "Dear "+rideBooked.ride.firstName + " " + rideBooked.ride.lastName + ",\n\nA ride booked with you has been updated in the KSU Rideshare app. Below are your ride and rider details:\n\nSource Campus: "+ rideBooked.ride.availability.sourceCampus +"\nDestination Campus: "+ rideBooked.ride.availability.destinationCampus + "\nDay of Ride: "+ rideBooked.ride.availability.availableDay +"\nTime of Ride: "+ rideBooked.ride.availability.availableTime +"\n\nRider's Name: "+ rideBooked.rider.firstName +" "+ rideBooked.rider.lastName +"\nRider's Phone: "+ rideBooked.rider.phone +"\nRider's Email: "+ rideBooked.rider.email +"\n\nWe hope you have a wonderful ride.\n\nBest Regards,\nKSU Rideshare Team");
                     res.status(200).json("Updated!");
                 } else {
                     console.log("no data exist for this ride id");
